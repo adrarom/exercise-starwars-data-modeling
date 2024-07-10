@@ -1,10 +1,9 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Table, Enum
+from sqlalchemy import Column, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-# Tabla de relación muchos a muchos para los favoritos
 favoritos_planetas = Table('favoritos_planetas', Base.metadata,
     Column('usuario_id', Integer, ForeignKey('usuarios.id'), primary_key=True),
     Column('planeta_id', Integer, ForeignKey('planetas.id'), primary_key=True)
@@ -49,7 +48,6 @@ class Personaje(Base):
     
     usuarios = relationship('Usuario', secondary=favoritos_personajes, back_populates='personajes_favoritos')
 
-# Tabla de ejemplo para Posts si se desea extender el blog
 class Post(Base):
     __tablename__ = 'posts'
     
@@ -72,6 +70,5 @@ class Comentario(Base):
     post = relationship('Post', back_populates='comentarios')
     autor = relationship('Usuario', back_populates='comentarios')
 
-# Relación con los posts y comentarios
 Usuario.posts = relationship('Post', order_by=Post.id, back_populates='user')
 Usuario.comentarios = relationship('Comentario', order_by=Comentario.id, back_populates='autor')
